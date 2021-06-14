@@ -1,15 +1,15 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
-import axios from 'axios';
-import { 
-  AUTH_STATE, 
-  CRED, 
-  LOGIN_USER, 
-  POST_PROFILE, 
-  PROFILE, 
-  JWT, 
-  USER 
-} from '../types';
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+import axios from "axios";
+import {
+  AUTH_STATE,
+  CRED,
+  LOGIN_USER,
+  POST_PROFILE,
+  PROFILE,
+  JWT,
+  USER,
+} from "../types";
 
 // Login
 export const fetchAsyncLogin = createAsyncThunk(
@@ -71,7 +71,7 @@ export const fetchAsyncCreateProf = createAsyncThunk(
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `JWT ${localStorage.localJWT}`
+          Authorization: `JWT ${localStorage.localJWT}`,
         },
       }
     );
@@ -87,7 +87,7 @@ export const fetchAsyncGetProfs = createAsyncThunk(
       `${process.env.REACT_APP_API_URL}/api/profile/`,
       {
         headers: {
-          Authorization: `JWT ${localStorage.localJWT}`
+          Authorization: `JWT ${localStorage.localJWT}`,
         },
       }
     );
@@ -107,7 +107,7 @@ export const fetchAsyncUpdateProf = createAsyncThunk(
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `JWT ${localStorage.localJWT}`
+          Authorization: `JWT ${localStorage.localJWT}`,
         },
       }
     );
@@ -121,18 +121,17 @@ const initialState: AUTH_STATE = {
     id: 0,
     username: "",
   },
-  profiles: [{ id: 0, user_profile: 0, img: null }]
+  profiles: [{ id: 0, user_profile: 0, img: null }],
 };
 
-
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     toggleMode(state) {
-      state.isLoginView = !state.isLoginView
-    }
+      state.isLoginView = !state.isLoginView;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -147,8 +146,8 @@ export const authSlice = createSlice({
       (state, action: PayloadAction<LOGIN_USER>) => {
         return {
           ...state,
-          loginUser: action.payload
-        }
+          loginUser: action.payload,
+        };
       }
     );
     builder.addCase(
@@ -156,8 +155,8 @@ export const authSlice = createSlice({
       (state, action: PayloadAction<PROFILE[]>) => {
         return {
           ...state,
-          profiles: action.payload
-        }
+          profiles: action.payload,
+        };
       }
     );
     builder.addCase(
@@ -165,7 +164,7 @@ export const authSlice = createSlice({
       (state, action: PayloadAction<PROFILE>) => {
         return {
           ...state,
-          profiles: state.profiles.map((prof) => 
+          profiles: state.profiles.map((prof) =>
             prof.id === action.payload.id ? action.payload : prof
           ),
         };

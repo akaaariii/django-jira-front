@@ -18,7 +18,7 @@ export interface PROFILE {
 /* ProfileをPOSTする時 */
 export interface POST_PROFILE {
   id: number;
-  img: File | null
+  img: File | null;
 }
 /* Credential(認証などに用いられるID、ユーザー名、暗証番号、パスワード、生体パターンなどの識別情報の総称) */
 export interface CRED {
@@ -38,5 +38,5 @@ export interface USER {
 export interface AUTH_STATE {
   isLoginView: boolean;
   loginUser: LOGIN_USER; // 'loginuser/'
-  profiles: PROFILE[];   // 'profile/'
+  profiles: PROFILE[]; // 'profile/'
 }
