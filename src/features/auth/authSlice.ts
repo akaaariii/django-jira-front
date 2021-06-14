@@ -79,6 +79,42 @@ export const fetchAsyncCreateProf = createAsyncThunk(
   }
 );
 
+// Profileの一覧を取得
+export const fetchAsyncGetProfs = createAsyncThunk(
+  "auth/getProfiles",
+  async () => {
+    const res = await axios.get<PROFILE[]>(
+      `${process.env.REACT_APP_API_URL}/api/profile/`,
+      {
+        headers: {
+          Authorization: `JWT ${localStorage.localJWT}`
+        },
+      }
+    );
+    return res.data;
+  }
+);
+
+// Profileのupdate
+export const fetchAsyncUpdateProf = createAsyncThunk(
+  "auth/updateProfile",
+  async (profile: POST_PROFILE) => {
+    const uploadData = new FormData();
+    profile.img && uploadData.append("img", profile.img, profile.img.name);
+    const res = await axios.put<PROFILE>(
+      `${process.env.REACT_APP_API_URL}/api/profile/${profile.id}/`,
+      uploadData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `JWT ${localStorage.localJWT}`
+        },
+      }
+    );
+    return res.data;
+  }
+);
+
 const initialState: AUTH_STATE = {
   isLoginView: true,
   loginUser: {
@@ -93,11 +129,55 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
-  reducers: {},
+  reducers: {
+    toggleMode(state) {
+      state.isLoginView = !state.isLoginView
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      fetchAsyncLogin.fulfilled, // 正常終了した場合
+      (state, action: PayloadAction<JWT>) => {
+        localStorage.setItem("localJWT", action.payload.access);
+        action.payload.access && (window.location.href = "/tasks");
+      }
+    );
+    builder.addCase(
+      fetchAsyncGetMyProf.fulfilled,
+      (state, action: PayloadAction<LOGIN_USER>) => {
+        return {
+          ...state,
+          loginUser: action.payload
+        }
+      }
+    );
+    builder.addCase(
+      fetchAsyncGetProfs.fulfilled,
+      (state, action: PayloadAction<PROFILE[]>) => {
+        return {
+          ...state,
+          profiles: action.payload
+        }
+      }
+    );
+    builder.addCase(
+      fetchAsyncUpdateProf.fulfilled,
+      (state, action: PayloadAction<PROFILE>) => {
+        return {
+          ...state,
+          profiles: state.profiles.map((prof) => 
+            prof.id === action.payload.id ? action.payload : prof
+          ),
+        };
+      }
+    );
+  },
 });
 
-export const {  } = authSlice.actions;
+export const { toggleMode } = authSlice.actions;
 
-export const selectCount = (state: RootState) => state.counter.value;
+export const selectIsLoginView = (state: RootState) => state.auth.isLoginView;
+export const selectLoginUser = (state: RootState) => state.auth.loginUser;
+export const selectProfiles = (state: RootState) => state.auth.profiles;
 
 export default authSlice.reducer;
