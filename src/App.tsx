@@ -125,6 +125,22 @@ const App: React.FC = () => {
               </button>
             </div>
           </Grid>
+          <Grid item xs={6}>
+            {tasks[0]?.task && <TaskList />}
+          </Grid>
+          <Grid item xs={6}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+              style={{ minHeight: "80vh" }}
+            >
+              <Grid item>
+                {editedTask.status ? <TaskForm /> : <TaskDisplay />}
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </div>
     </MuiThemeProvider>
