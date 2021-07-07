@@ -84,3 +84,10 @@ export interface TASK_STATE {
   users: USER[]; // 'users/'にGETでアクセスした時に得られる
   category: CATEGORY[]; // 'category'にGETでアクセスした時に得られる
 }
+
+/* TaskList.tsx */
+export interface SORT_STATE {
+  rows: READ_TASK[];
+  order: "desc" | "asc";
+  activeKey: string;
+}
